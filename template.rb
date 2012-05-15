@@ -184,6 +184,14 @@ run 'rake db:create'
 run 'rake db:migrate'
 run 'rake db:test:prepare'
 
+# Controllers
+inside('app/controllers') do
+  file 'landing_controller.rb', <<-CONTROLLER
+class LandingController < ApplicationController
+end
+CONTROLLER
+end
+
 # Views
 inside('app/views') do
   run 'rm layouts/application.html.erb'
@@ -191,14 +199,17 @@ inside('app/views') do
 !!!5
 %html
   %head
-    %title #{app_name}
+    %title #{app_name.titleize}
     = stylesheet_link_tag :application, :media => :all
     = javascript_include_tag :application
+    = javascript_include_tag 'http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.5.3/modernizr.min.js'
     = yield :head
 
-  %body{:class => body_class}
+  %body{:class => body_classes}
     %header
       = render :partial => 'shared/header'
+    %section#flash
+      = flash_helper
     %section#main
       = yield
     %footer
@@ -208,6 +219,14 @@ VIEW
   run 'mkdir shared'
   FileUtils.touch('shared/_header.html.haml')
   FileUtils.touch('shared/_footer.html.haml')
+
+  file 'shared/_flash.html.haml', <<-VIEW
+%section{:class => ['flash', key]}
+  %p= message
+VIEW
+
+  run 'mkdir landing'
+  file 'landing/show.html.haml', ''
 end
 
 application_rb = File.open('config/application.rb').readlines
@@ -220,8 +239,31 @@ haml_config = <<-RUBY
 RUBY
 
 new_application_rb = ((application_rb.clone[0..-3] << haml_config) + application_rb[-2..-1]).join
-
 file 'config/application.rb', new_application_rb, :force => true
+
+file 'config/routes.rb', <<-ROUTES, :force => true
+#{app_name.classify}::Application.routes.draw do
+  root :to => 'landing#show'
+end
+ROUTES
+
+# Helpers
+
+inside('app/helpers') do
+  file 'application_helper.rb', <<-HELPER, :force => true
+module ApplicationHelper
+  def body_classes
+    [params[:controller], params[:action]]
+  end
+
+  def flash_helper
+    flash.keys.inject('') do |html, key|
+      html << render(:partial => 'shared/flash', :locals => { :key => key, :message => flash[key] })
+    end.html_safe
+  end
+end
+HELPER
+end
 
 # Initializers
 generate('simple_form:install')
