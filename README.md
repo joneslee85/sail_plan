@@ -9,6 +9,10 @@ Sail Plan is [DockYard](http://dockyard.com)'s Rails template
 > rails new app_name --old-style-hash -T -d postgresql --skip-bundle -m https://raw.github.com/dockyard/sail_plan/master/template.rb
 ```
 
+## Authors ##
+
+* [Brian Cardarella](http://twitter.com/bcardarella)
+
 ## Legal ##
 
 [DockYard](http://dockyard.com), LLC &copy; 2012
