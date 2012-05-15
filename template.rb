@@ -75,8 +75,6 @@ end
 
 inside('spec/support') do
   file 'factory_girl.rb', <<-FILE
-  require "factory_girl"
-
   RSpec.configure do |config|
     config.include Factory::Syntax::Methods
   end
@@ -213,7 +211,6 @@ inside('app/views') do
 end
 
 application_rb = File.open('config/application.rb').readlines
-application_rb.map! { |line| line.gsub(/"/, "'") }
 haml_config = <<-RUBY
 
     # Set Haml to be the default template type
