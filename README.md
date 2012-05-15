@@ -1,6 +1,13 @@
 # Sail Plan #
 ![Sail Plan will get you up and sailing quickly](http://upload.wikimedia.org/wikipedia/commons/8/87/Tackling.png)
+
 Sail Plan is [DockYard](http://dockyard.com)'s Rails template
+
+## Usage ##
+
+```
+> rails new app_name --old-style-hash -T -d postgresql --skip-bundle -m https://raw.github.com/dockyard/sail_plan/master/template.rb
+```
 
 ## Legal ##
 
