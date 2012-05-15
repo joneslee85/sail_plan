@@ -75,76 +75,76 @@ end
 
 inside('spec/support') do
   file 'factory_girl.rb', <<-FILE
-  RSpec.configure do |config|
-    config.include Factory::Syntax::Methods
-  end
-  FILE
+RSpec.configure do |config|
+  config.include Factory::Syntax::Methods
+end
+FILE
 
   file 'factories.rb', <<-FILE
-  # Factories
+# Factories
 
-  FILE
+FILE
 
   file 'database_cleaner.rb', <<-FILE
-  require 'database_cleaner'
+require 'database_cleaner'
 
-  RSpec.configure do |config|
-    config.before(:suite) do
-      DatabaseCleaner.strategy = :truncation
-    end
-
-    config.before(:each) do
-      DatabaseCleaner.clean
-      DatabaseCleaner.start
-    end
-
-    config.after(:each) do
-      DatabaseCleaner.clean
-    end
+RSpec.configure do |config|
+  config.before(:suite) do
+    DatabaseCleaner.strategy = :truncation
   end
-  FILE
+
+  config.before(:each) do
+    DatabaseCleaner.clean
+    DatabaseCleaner.start
+  end
+
+  config.after(:each) do
+    DatabaseCleaner.clean
+  end
+end
+FILE
 
   file 'timecop.rb', <<-FILE
-  require 'timecop'
+require 'timecop'
 
-  RSpec.configure do |config|
-    config.before(:suite) do
-      Timecop.travel(DateTime.new(2012, 1, 1, 6, 30, 0, 0))
-    end
-
-    config.after(:suite) do
-      Timecop.return
-    end
+RSpec.configure do |config|
+  config.before(:suite) do
+    Timecop.travel(DateTime.new(2012, 1, 1, 6, 30, 0, 0))
   end
-  FILE
+
+  config.after(:suite) do
+    Timecop.return
+  end
+end
+FILE
 
   file 'capybara', <<-FILE
-  require 'capybara/rspec'
-  FILE
+require 'capybara/rspec'
+FILE
 
   file 'capybara-email', <<-FILE
-  require 'capybara/email/rspec'
-  FILE
+require 'capybara/email/rspec'
+FILE
 
   file 'spec/support/capybara-webkit.rb', <<-FILE
-  RSpec.configure do |config|
-    config.before(:suite) do
-      @headless = Headless.new
-      @headless.start
-      Capybara.javascript_driver = :webkit
-    end
-
-    config.after(:suite) do
-      @headless.destroy
-    end
+RSpec.configure do |config|
+  config.before(:suite) do
+    @headless = Headless.new
+    @headless.start
+    Capybara.javascript_driver = :webkit
   end
-  FILE
+
+  config.after(:suite) do
+    @headless.destroy
+  end
+end
+FILE
 
   file 'bourne.rb', <<-FILE
-  RSpec.configure do |config|
-    config.mock_with :mocha
-  end
-  FILE
+RSpec.configure do |config|
+  config.mock_with :mocha
+end
+FILE
 end
 
 # Database
@@ -188,22 +188,22 @@ run 'rake db:test:prepare'
 inside('app/views') do
   run 'rm layouts/application.html.erb'
   file 'layouts/application.html.haml', <<-VIEW
-  !!!5
-  %html
-    %head
-      %title #{app_name}
-      = stylesheet_link_tag :application, :media => :all
-      = javascript_include_tag :application
-      = yield :head
+!!!5
+%html
+  %head
+    %title #{app_name}
+    = stylesheet_link_tag :application, :media => :all
+    = javascript_include_tag :application
+    = yield :head
 
-    %body{:class => body_class}
-      %header
-        = render :partial => 'shared/header'
-      %section#main
-        = yield
-      %footer
-        = render :partial => 'shared/footer'
-  VIEW
+  %body{:class => body_class}
+    %header
+      = render :partial => 'shared/header'
+    %section#main
+      = yield
+    %footer
+      = render :partial => 'shared/footer'
+VIEW
 
   run 'mkdir shared'
   FileUtils.touch('shared/_header.html.haml')
