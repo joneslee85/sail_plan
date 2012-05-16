@@ -16,6 +16,8 @@ Sail Plan is [DockYard](http://dockyard.com)'s Rails template
 * [Compass](http://compass-style.org)
 * [SimpleForm](https://github.com/plataformatec/simple_form)
 * [Exceptional.io](http://exceptional.io)
+* [Modernizr](http://modernizr.com) (through a [CDN](http://www.cdnjs.com))
+* [EasyAuth](https://github.com/dockyard/easy_auth)
 
 ### Devlopment Environment ###
 
