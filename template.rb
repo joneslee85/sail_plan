@@ -94,7 +94,8 @@ end
 
 def install_additional_gems
   %w{easy_auth}.inject([]) do |list, gem|
-    list << install_options[gem.to_sym].gemfile
+    list << install_options[gem.to_sym].gemfile if install_options[gem.to_sym]
+    list
   end.join
 end
 
@@ -172,6 +173,8 @@ RSPEC
 
 inside('spec') do
   run 'mkdir support'
+  run 'mkdir requests'
+  FileUtils.touch('requests/.gitignore')
 end
 
 inside('spec/support') do
@@ -274,8 +277,10 @@ inside('app/controllers') do
 class LandingController < ApplicationController
 end
 CONTROLLER
-  insert_into_file('application_controller.rb', :after => /ActionController::Base\n/) do
-    "  include EasyAuth::Helpers\n"
+  if easy_auth_installed?
+    insert_into_file('application_controller.rb', :after => /ActionController::Base\n/) do
+      "  include EasyAuth::Helpers\n"
+    end
   end
 end
 
@@ -365,6 +370,12 @@ inside('app/assets/stylesheets') do
   stylesheet << %{ */\n\n@import "compass/reset"}
   File.open('application.css.sass', 'w+') { |f| f << stylesheet.join }
   run 'rm application.css'
+end
+
+inside('app/assets/javascripts') do
+  javascript = File.open('application.js').readlines
+  File.open('application.js.coffee', 'w+') { |f| f << javascript.map { |line| line.gsub(/^\/\//, '#') }.join }
+  run 'rm application.js'
 end
 
 # Database
