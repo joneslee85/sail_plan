@@ -476,4 +476,4 @@ get_rid_of_shitty_double_quotes
 
 git :init
 git :add => '.'
-git :commit => "-a -m 'Initial project commit'"
+git :commit => "-a -m 'Initial Project Generated from SailPlan'"
