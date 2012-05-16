@@ -26,6 +26,19 @@ def install_options
   @install_options
 end
 
+def replace_line(path, options = {})
+  lines = File.open(path).readlines
+  lines.map! do |line|
+    if line.match(options[:match])
+      line = "#{options[:with].rstrip}\n"
+    end
+    line
+  end 
+
+  run "rm #{path}"
+  File.open(path, 'w+') { |file| file << lines.join }
+end
+
 def setup_shell
   begin
     require 'session'
@@ -173,38 +186,50 @@ RSPEC
 
 inside('spec') do
   run 'mkdir support'
-  run 'mkdir requests'
-  FileUtils.touch('requests/.gitignore')
+  run 'mkdir config'
+  run 'mkdir -p requests/step_helpers'
+  FileUtils.touch('requests/step_helpers/.gitignore')
+
+  insert_into_file 'spec_helper.rb', :after => "Dir[Rails.root.join('spec/support/**/*.rb')].each {|f| require f}\n" do
+    "Dir[Rails.root.join('spec/config/**/*.rb')].each  {|f| require f}\n"
+  end
 end
 
-inside('spec/support') do
-  file 'factory_girl.rb', <<-FILE
-RSpec.configure do |config|
-config.include FactoryGirl::Syntax::Methods
-end
-FILE
-
-  file 'factories.rb', <<-FILE
+file 'spec/support/factories.rb', <<-FILE
 # Factories
 
 FILE
+
+inside('spec/config') do
+  file 'rspec.rb', <<-FILE
+RSpec.configure do |config|
+  config.treat_symbols_as_metadata_keys_with_true_values = true
+end
+FILE
+
+  file 'factory_girl.rb', <<-FILE
+RSpec.configure do |config|
+  config.include FactoryGirl::Syntax::Methods
+end
+FILE
+
 
   file 'database_cleaner.rb', <<-FILE
 require 'database_cleaner'
 
 RSpec.configure do |config|
-config.before(:suite) do
-  DatabaseCleaner.strategy = :truncation
-end
+  config.before(:suite) do
+    DatabaseCleaner.strategy = :truncation
+  end
 
-config.before(:each) do
-  DatabaseCleaner.clean
-  DatabaseCleaner.start
-end
+  config.before(:each) do
+    DatabaseCleaner.clean
+    DatabaseCleaner.start
+  end
 
-config.after(:each) do
-  DatabaseCleaner.clean
-end
+  config.after(:each) do
+    DatabaseCleaner.clean
+  end
 end
 FILE
 
@@ -212,13 +237,13 @@ FILE
 require 'timecop'
 
 RSpec.configure do |config|
-config.before(:suite) do
-  Timecop.travel(DateTime.new(2012, 1, 1, 6, 30, 0, 0))
-end
+  config.before(:suite) do
+    Timecop.travel(DateTime.new(2012, 1, 1, 6, 30, 0, 0))
+  end
 
-config.after(:suite) do
-  Timecop.return
-end
+  config.after(:suite) do
+    Timecop.return
+  end
 end
 FILE
 
@@ -416,6 +441,7 @@ rbenv_run 'rake db:test:prepare'
 
 # Initializers
 generate('simple_form:install')
+replace_line('config/initializers/simple_form.rb', :match => /config.label_text/, :with => "  config.label_text = lambda { |label, required| label }")
 
 if (api_key = ask('Exceptional.io API Key: ')).present?
   rbenv_run "exceptional install #{api_key}"
