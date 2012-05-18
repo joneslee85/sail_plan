@@ -141,6 +141,7 @@ gem 'compass-rails'
 gem 'haml'
 gem 'simple_form'
 gem 'exceptional'
+gem 'kaminari'
 #{install_additional_gems}
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
@@ -318,6 +319,7 @@ inside('app/views') do
 %head
   %title #{app_name.titleize}
   = stylesheet_link_tag :application, :media => :all
+  = stylesheet_link_tag :print, :media => :print
   = javascript_include_tag 'http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.5.3/modernizr.min.js'
   = javascript_include_tag :application
   %link{:rel => 'author', :href => '/humans.txt'}
@@ -358,6 +360,7 @@ RUBY
 
 new_application_rb = ((application_rb.clone[0..-3] << haml_config) + application_rb[-2..-1]).join
 file 'config/application.rb', new_application_rb, :force => true
+replace_line('config/application.rb', :match => /config.autoload_paths/, :with => '   config.autoload_paths += %W(#{config.root}/app/assets/fonts)')
 
 file 'config/routes.rb', <<-ROUTES, :force => true
 #{app_name.classify}::Application.routes.draw do
@@ -391,10 +394,54 @@ end
 
 # Assets
 inside('app/assets/stylesheets') do
-  stylesheet = File.open('application.css').readlines[0..-2]
-  stylesheet << %{ */\n\n@import "compass/reset"}
-  File.open('application.css.sass', 'w+') { |f| f << stylesheet.join }
   run 'rm application.css'
+  file 'application.css.sass', <<-FILE
+/*
+ * This is a manifest file that'll be compiled into print.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets/application, vendor/assets/stylesheets/application,
+ * or vendor/assets/stylesheets/application of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require_self
+ *= require_tree ./application
+ */
+FILE
+run 'mkdir application'
+file 'application/index.css.sass', <<-FILE
+/*
+ * Index for application.css.sass
+ */
+
+@import "compass/reset"
+FILE
+
+  file 'print.css.sass', <<-FILE
+/*
+ * This is a manifest file that'll be compiled into print.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets/print, vendor/assets/stylesheets/print,
+ * or vendor/assets/stylesheets/print of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add print-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require_self
+ *= require_tree ./print
+ */
+FILE
+run 'mkdir print'
+file 'print/index.css.sass', <<-FILE
+/*
+ * Index for print.css.sass
+ */
+FILE
+run 'mkdir mixins'
+FileUtils.touch('mixins/.gitignore')
 end
 
 inside('app/assets/javascripts') do
@@ -402,6 +449,9 @@ inside('app/assets/javascripts') do
   File.open('application.js.coffee', 'w+') { |f| f << javascript.map { |line| line.gsub(/^\/\//, '#') }.join }
   run 'rm application.js'
 end
+
+run('mkdir app/assets/fonts')
+FileUtils.touch('app/assets/fonts/.gitignore')
 
 # Database
 file 'config/database.example.yml', <<-DATABASE, :force => true
@@ -442,6 +492,8 @@ rbenv_run 'rake db:test:prepare'
 # Initializers
 generate('simple_form:install')
 replace_line('config/initializers/simple_form.rb', :match => /config.label_text/, :with => "  config.label_text = lambda { |label, required| label }")
+
+generate('kaminari:config')
 
 if (api_key = ask('Exceptional.io API Key: ')).present?
   rbenv_run "exceptional install #{api_key}"

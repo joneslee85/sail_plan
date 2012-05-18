@@ -18,6 +18,7 @@ rails new app_name --old-style-hash -T -d postgresql --skip-bundle -m https://ra
 * [Exceptional.io](http://exceptional.io)
 * [Modernizr](http://modernizr.com) (through a [CDN](http://www.cdnjs.com))
 * [EasyAuth](https://github.com/dockyard/easy_auth)
+* [Kaminari](https://github.com/amatsuda/kaminari)
 
 ### Devlopment Environment ###
 
@@ -37,6 +38,12 @@ rails new app_name --old-style-hash -T -d postgresql --skip-bundle -m https://ra
 * [Debugger](https://github.com/cldwalker/debugger)
 * [Fivemat](https://github.com/tpope/fivemat)
 * [DatabaseCleaner](https://github.com/bmabey/database_cleaner)
+
+### Environment Additions ###
+
+* `app/assets/fonts` has been added to the asset pipeline
+* `application.css` has been renamed to `application.css.sass` and it always requires `app/assets/stylesheets/application/index.css.sass`
+* A print style sheet has been added: `app/assets/stylesheets/print.css.sass` that always requires `app/assets/stylesheets/print/index.css.sass`
 
 ## Authors ##
 
