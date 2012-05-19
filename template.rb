@@ -106,10 +106,14 @@ def get_rid_of_shitty_double_quotes
 end
 
 def install_additional_gems
-  %w{easy_auth}.inject([]) do |list, gem|
+  gems = %w{easy_auth}.inject([]) do |list, gem|
     list << install_options[gem.to_sym].gemfile if install_options[gem.to_sym]
     list
-  end.join
+  end
+
+  unless gems.empty?
+    gems.join("\n") + "\n"
+  end
 end
 
 def run_additional_rake_tasks
