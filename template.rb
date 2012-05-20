@@ -319,24 +319,25 @@ inside('app/views') do
   file 'layouts/application.html.haml', <<-VIEW
 !!!5
 %html
-%head
-  %title #{app_name.titleize}
-  = stylesheet_link_tag :application, :media => :all
-  = stylesheet_link_tag :print, :media => :print
-  = javascript_include_tag 'http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.5.3/modernizr.min.js'
-  = javascript_include_tag :application
-  %link{:rel => 'author', :href => '/humans.txt'}
-  = yield :head
+  %head
+    %title #{app_name.titleize}
+    = stylesheet_link_tag :application, :media => :all
+    = stylesheet_link_tag :print, :media => :print
+    = javascript_include_tag 'http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.5.3/modernizr.min.js'
+    = javascript_include_tag :application
+    = csrf_meta_tags
+    %link{:rel => 'author', :href => '/humans.txt'}
+    = yield :head
 
-%body{:class => body_classes}
-  %header
-    = render :partial => 'shared/header'
-  %section#flash
-    = flash_helper
-  %section#main
-    = yield
-  %footer
-    = render :partial => 'shared/footer'
+  %body{:class => body_classes}
+    %header
+      = render :partial => 'shared/header'
+    %section#flash
+      = flash_helper
+    %section#main
+      = yield
+    %footer
+      = render :partial => 'shared/footer'
 VIEW
 
   run 'mkdir shared'
