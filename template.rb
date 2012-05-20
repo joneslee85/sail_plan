@@ -193,7 +193,7 @@ inside('spec') do
   run 'mkdir support'
   run 'mkdir config'
   run 'mkdir -p requests/step_helpers'
-  FileUtils.touch('requests/step_helpers/.gitignore')
+  FileUtils.touch('requests/step_helpers/.gitkeep')
 
   insert_into_file 'spec_helper.rb', :after => "Dir[Rails.root.join('spec/support/**/*.rb')].each {|f| require f}\n" do
     "Dir[Rails.root.join('spec/config/**/*.rb')].each  {|f| require f}\n"
@@ -445,7 +445,7 @@ file 'print/index.css.sass', <<-FILE
  */
 FILE
 run 'mkdir mixins'
-FileUtils.touch('mixins/.gitignore')
+FileUtils.touch('mixins/.gitkeep')
 end
 
 inside('app/assets/javascripts') do
@@ -455,7 +455,7 @@ inside('app/assets/javascripts') do
 end
 
 run('mkdir app/assets/fonts')
-FileUtils.touch('app/assets/fonts/.gitignore')
+FileUtils.touch('app/assets/fonts/.gitkeep')
 
 # Database
 file 'config/database.example.yml', <<-DATABASE, :force => true
@@ -563,6 +563,7 @@ db/structure.sql
 *.swo
 .DS_Store
 **/.DS_STORE
+.sass-cache/*
 GITIGNORE
 
 get_rid_of_shitty_double_quotes
