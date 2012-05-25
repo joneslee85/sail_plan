@@ -194,7 +194,7 @@ inside('spec') do
   run 'mkdir -p requests/step_helpers'
   FileUtils.touch('requests/step_helpers/.gitkeep')
 
-  insert_into_file 'spec_helper.rb', :after => "Dir[Rails.root.join('spec/support/**/*.rb')].each {|f| require f}\n" do
+  insert_into_file 'spec_helper.rb', :before => "Dir[Rails.root.join('spec/support/**/*.rb')].each {|f| require f}\n" do
     "Dir[Rails.root.join('spec/config/**/*.rb')].each  {|f| require f}\n"
   end
 end
@@ -270,15 +270,10 @@ FILE
   file 'headless.rb', <<-FILE
 require 'headless'
 
-RSpec.configure do |config|
-  config.before(:suite) do
-    $headless = Headless.new
-    $headless.start
-  end
-
-  config.after(:suite) do
-    $headless.destroy
-  end
+$headless = Headless.new
+$headless.start
+at_exit do
+  $headless.destroy
 end
 FILE
 
@@ -564,7 +559,14 @@ db/structure.sql
 .DS_Store
 **/.DS_STORE
 .sass-cache/*
+bundler_stubs/*
 GITIGNORE
+
+run 'mkdir .bundle'
+file '.bundle/config', <<-FILE
+---
+BUNDLE_BIN: ./bundler_stubs
+FILE
 
 get_rid_of_shitty_double_quotes
 
