@@ -195,7 +195,8 @@ inside('spec') do
   FileUtils.touch('requests/step_helpers/.gitkeep')
 
   insert_into_file 'spec_helper.rb', :before => "Dir[Rails.root.join('spec/support/**/*.rb')].each {|f| require f}\n" do
-    "Dir[Rails.root.join('spec/config/**/*.rb')].each  {|f| require f}\n"
+    "Dir[Rails.root.join('spec/config/**/*.rb')].each  {|f| require f}\n" + 
+    "Dir[Rails.root.join('spec/requests/step_helpers/**/*.rb')].each  {|f| require f}\n"
   end
 end
 
