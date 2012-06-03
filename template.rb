@@ -543,6 +543,18 @@ $ rake db:reseed
 You should be good to go!
 README
 
+file 'public/humans.txt', <<-HUMANS
+/* TEAM */
+  Principal Developer: DockYard
+  Contact: contact@dockyard.com
+  Twitter: @DockYard
+  From: Boston, MA
+
+/* SITE */
+  Language: English
+  Docktype: HTML5
+  Frameworks: Ruby on Rails, jQuery, Backbone, Compass
+HUMANS
 # Git Ignore
 file '.gitignore', <<-GITIGNORE, :force => true
 .bundle
