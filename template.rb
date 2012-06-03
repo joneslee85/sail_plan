@@ -322,7 +322,7 @@ inside('app/views') do
     = javascript_include_tag 'http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.5.3/modernizr.min.js'
     = javascript_include_tag :application
     = csrf_meta_tags
-    %link{:rel => 'author', :href => '/humans.txt'}
+    %link{:rel => 'author', :type => 'text/plain', :href => '/humans.txt'}
     = yield :head
 
   %body{:class => body_classes}
@@ -501,9 +501,10 @@ end
 
 run 'rm public/index.html'
 run 'rm README.rdoc'
+
 file 'public/humans.txt', <<-FILE
 /* TEAM */
-  This site was built by DockYard, LLC
+  This app was built by DockYard, LLC
   Web: http://dockyard.com
   Twitter: @dockyard
   Email: contact@dockyard.com
@@ -513,6 +514,7 @@ file 'public/humans.txt', <<-FILE
   Standards: HTML5, CSS3
   Components: Ruby on Rails
   Software: Vim, OSX
+  Frameworks: Ruby on Rails, jQuery, Backbone, Compass
 FILE
 
 file 'README.md', <<-README
@@ -543,18 +545,6 @@ $ rake db:reseed
 You should be good to go!
 README
 
-file 'public/humans.txt', <<-HUMANS
-/* TEAM */
-  Principal Developer: DockYard
-  Contact: contact@dockyard.com
-  Twitter: @DockYard
-  From: Boston, MA
-
-/* SITE */
-  Language: English
-  Docktype: HTML5
-  Frameworks: Ruby on Rails, jQuery, Backbone, Compass
-HUMANS
 # Git Ignore
 file '.gitignore', <<-GITIGNORE, :force => true
 .bundle
