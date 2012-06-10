@@ -146,6 +146,7 @@ gem 'simple_form'
 gem 'exceptional'
 gem 'kaminari'
 #{install_additional_gems}
+gem 'thin'
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
@@ -154,6 +155,7 @@ end
 
 group :development do
   gem 'quiet_assets'
+  gem 'foreman'
 end
 
 group :development, :test do
@@ -178,6 +180,16 @@ end
 GEMFILE
 
 rbenv_run 'bundle install'
+
+# Foreman Setup
+file '.env', <<-ENVFILE, force: true
+PORT=3000
+RAILS_ENV=development
+ENVFILE
+
+file 'Procfile', <<-PROCFILE, :force => true
+web: bundle exec thin start -R config.ru -e $RAILS_ENV -p $PORT
+PROCFILE
 
 # Test
 FileUtils.rm_rf('test')
@@ -362,6 +374,9 @@ new_application_rb = ((application_rb.clone[0..-3] << haml_config) + application
 file 'config/application.rb', new_application_rb, :force => true
 replace_line('config/application.rb', :match => /config.autoload_paths/, :with => '   config.autoload_paths += %W(#{config.root}/app/assets/fonts)')
 
+#Add print.css.scss to asset precompilation
+replace_line('config/environments/production.rb', :match => /config.assets.precompile \+=/, :with => '  config.assets.precompile += %w( print.css )')
+
 file 'config/routes.rb', <<-ROUTES, :force => true
 #{app_name.classify}::Application.routes.draw do
   root :to => 'landing#show'
@@ -397,7 +412,7 @@ inside('app/assets/stylesheets') do
   run 'rm application.css'
   file 'application.css.sass', <<-FILE
 /*
- * This is a manifest file that'll be compiled into print.css, which will include all the files
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
  * listed below.
  *
  * Any CSS and SCSS file within this directory, lib/assets/stylesheets/application, vendor/assets/stylesheets/application,
