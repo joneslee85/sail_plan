@@ -19,11 +19,13 @@ rails new app_name --old-style-hash -T -d postgresql --skip-bundle -m https://ra
 * [Modernizr](http://modernizr.com) (through a [CDN](http://www.cdnjs.com))
 * [EasyAuth](https://github.com/dockyard/easy_auth)
 * [Kaminari](https://github.com/amatsuda/kaminari)
+* [Thin](https://github.com/macournoyer/thin)
 
 ### Devlopment Environment ###
 
 * [QuietAssets](https://github.com/evrone/quiet_assets)
 * [Debugger](https://github.com/cldwalker/debugger)
+* [Foreman](https://github.com/ddollar/foreman)
 
 ### Testing Environment ###
 
@@ -48,6 +50,7 @@ rails new app_name --old-style-hash -T -d postgresql --skip-bundle -m https://ra
 ## Authors ##
 
 * [Brian Cardarella](http://twitter.com/bcardarella)
+* [Dan McClain](http://twitter.com/_danmcclain)
 
 ## Legal ##
 
