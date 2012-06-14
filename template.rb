@@ -155,7 +155,6 @@ end
 
 group :development do
   gem 'quiet_assets'
-  gem 'foreman'
 end
 
 group :development, :test do
@@ -180,16 +179,6 @@ end
 GEMFILE
 
 rbenv_run 'bundle install'
-
-# Foreman Setup
-file '.env', <<-ENVFILE, force: true
-PORT=3000
-RAILS_ENV=development
-ENVFILE
-
-file 'Procfile', <<-PROCFILE, :force => true
-web: bundle exec thin start -R config.ru -e $RAILS_ENV -p $PORT
-PROCFILE
 
 # Test
 FileUtils.rm_rf('test')
