@@ -25,7 +25,6 @@ rails new app_name --old-style-hash -T -d postgresql --skip-bundle -m https://ra
 
 * [QuietAssets](https://github.com/evrone/quiet_assets)
 * [Debugger](https://github.com/cldwalker/debugger)
-* [Foreman](https://github.com/ddollar/foreman)
 
 ### Testing Environment ###
 
