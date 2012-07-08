@@ -18,6 +18,8 @@ rails new app_name --old-style-hash -T -d postgresql --skip-bundle -m https://ra
 * [Exceptional.io](http://exceptional.io)
 * [Modernizr](http://modernizr.com) (through a [CDN](http://www.cdnjs.com))
 * [EasyAuth](https://github.com/dockyard/easy_auth)
+* [BackboneJS](backbonejs.org)
+* [haml_coffee_assets](https://github.com/netzpirat/haml_coffee_assets)
 * [Kaminari](https://github.com/amatsuda/kaminari)
 * [Thin](https://github.com/macournoyer/thin)
 
@@ -30,7 +32,7 @@ rails new app_name --old-style-hash -T -d postgresql --skip-bundle -m https://ra
 
 * [RSpec](https://www.relishapp.com/rspec)
 * [Capybara](https://github.com/jnicklas/capybara)
-* [CapybaraWebkit](https://github.com/thoughtbot/capybara-webkit)
+* [Poltergiest](https://github.com/jonleighton/poltergeist)
 * [CapybaraEmail](https://github.com/dockyard/capybara-email)
 * [FactoryGirl](https://github.com/thoughtbot/factory_girl)
 * [Bourne](https://github.com/thoughtbot/bourne)

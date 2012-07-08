@@ -26,6 +26,11 @@ def install_options
   @install_options
 end
 
+def run_ruby_script(command, config={})
+  return unless behavior == :invoke
+  rbenv_run command, config.merge(:with => Thor::Util.ruby_command)
+end
+
 def replace_line(path, options = {})
   lines = File.open(path).readlines
   lines.map! do |line|
@@ -71,11 +76,6 @@ def rbenv_run(command, config={})
   destination = relative_to_original_destination_root(destination_root, false)
   desc = "#{command} from #{destination.inspect}"
 
-  if config[:with]
-    desc = "#{File.basename(config[:with].to_s)} #{desc}"
-    command = "#{config[:with]} #{command}"
-  end
-
   say_status :run, desc, config.fetch(:verbose, true)
 
   unless options[:pretend]
@@ -116,9 +116,36 @@ def install_additional_gems
   end
 end
 
+def install_additional_asset_gems
+  gems = []
+  if install_options[:backbone]
+    gems << "  gem 'haml_coffee_assets'"
+    gems << "  gem 'execjs'"
+  end
+
+  unless gems.empty?
+    gems.join("\n")
+  end
+end
+
 def run_additional_rake_tasks
   if easy_auth = easy_auth_installed?
-    run "rake #{easy_auth.rake_task}"
+    rbenv_run "rake #{easy_auth.rake_task}"
+  end
+end
+
+attempt = 0
+begin
+  raise "No PhantomJS" if `brew ls | grep phantomjs`.blank?
+rescue
+  attempt += 1
+  if attempt == 1
+    puts 'PhantomJS is not installed. Attempting to install via brew'
+    `brew install phantomjs`
+    retry
+  else
+    puts 'Could not install... please install PhantomJS before running this template. Exiting...'
+    exit!
   end
 end
 
@@ -129,8 +156,12 @@ FILE
 setup_shell
 
 # Gems
+if yes?('Install Backbone?')
+  install_options[:backbone] = true
+end
+
 if yes?('Install EasyAuth?')
-  account_class = ask_with_default('What should the account model be called?', 'Account')
+  account_class = ask_with_default('  What should the account model be called?', 'Account')
   install_options[:easy_auth] = EasyAuth.new(account_class)
 end
 
@@ -138,6 +169,7 @@ file 'Gemfile', <<-GEMFILE, :force => true
 source 'https://rubygems.org'
 
 gem 'rails', '3.2.3'
+gem 'thin'
 gem 'pg'
 gem 'jquery-rails'
 gem 'compass-rails'
@@ -146,11 +178,11 @@ gem 'simple_form'
 gem 'exceptional'
 gem 'kaminari'
 #{install_additional_gems}
-gem 'thin'
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
   gem 'uglifier', '>= 1.0.3'
+#{install_additional_asset_gems}
 end
 
 group :development do
@@ -165,7 +197,7 @@ end
 
 group :test do
   gem 'capybara'
-  gem 'capybara-webkit'
+  gem 'poltergeist', :git => 'git://github.com/jonleighton/poltergeist.git'
   gem 'valid_attribute'
   gem 'capybara-email'
   gem 'database_cleaner'
@@ -178,7 +210,8 @@ group :test do
 end
 GEMFILE
 
-rbenv_run 'bundle install'
+rbenv_run 'bundle install --binstubs'
+rbenv_run 'rbenv rehash'
 
 # Test
 FileUtils.rm_rf('test')
@@ -213,23 +246,39 @@ RSpec.configure do |config|
 end
 FILE
 
+  file 'active_record.rb', <<-FILE
+class ActiveRecord::Base
+  mattr_accessor :shared_connection
+  @@shared_connection = nil
+
+  def self.connection
+    @@shared_connection || retrieve_connection
+  end
+end
+
+RSpec.configure do |config|
+  config.before(:suite) do
+    ActiveRecord::Base.shared_connection = ActiveRecord::Base.connection
+  end
+end
+FILE
+
   file 'factory_girl.rb', <<-FILE
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
 end
 FILE
 
-
   file 'database_cleaner.rb', <<-FILE
 require 'database_cleaner'
 
 RSpec.configure do |config|
   config.before(:suite) do
+    DatabaseCleaner.clean
     DatabaseCleaner.strategy = :truncation
   end
 
   config.before(:each) do
-    DatabaseCleaner.clean
     DatabaseCleaner.start
   end
 
@@ -261,10 +310,12 @@ FILE
 require 'capybara/email/rspec'
 FILE
 
-  file 'capybara-webkit.rb', <<-FILE
+  file 'poltergeist.rb', <<-FILE
+require 'capybara/poltergeist'
+
 RSpec.configure do |config|
   config.before(:suite) do
-    Capybara.javascript_driver = :webkit
+    Capybara.javascript_driver = :poltergeist
   end
 end
 FILE
@@ -287,9 +338,8 @@ FILE
 end
 
 # Models
-
 if easy_auth = easy_auth_installed?
-  generate("model #{easy_auth.account_class} email:string first_name:string last_name:string")
+  generate("model #{easy_auth.account_class} email:string first_name:string last_name:string session_token:string")
   inside('app/models') do
     insert_into_file("#{easy_auth.account_filename}.rb", :after => /ActiveRecord::Base\n/) do
       "  include EasyAuth::Models::Account\n"
@@ -448,10 +498,44 @@ run 'mkdir mixins'
 FileUtils.touch('mixins/.gitkeep')
 end
 
+if install_options[:backbone]
+  inside('vendor/assets/javascripts') do
+    run 'curl -s http://backbonejs.org/backbone.js > backbone.js'
+    run 'curl -s http://documentcloud.github.com/underscore/underscore.js > underscore.js'
+  end
+end
+
 inside('app/assets/javascripts') do
   javascript = File.open('application.js').readlines
   File.open('application.js.coffee', 'w+') { |f| f << javascript.map { |line| line.gsub(/^\/\//, '#') }.join }
   run 'rm application.js'
+
+  if install_options[:backbone]
+    insert_into_file 'application.js.coffee', :after => "#= require jquery_ujs\n" do
+      ['underscore', 'hamlcoffee', 'backbone', 'backbone/bootstrap'].map { |req| "#= require #{req}" }.join("\n") + "\n"
+    end
+    run 'mkdir backbone'
+    inside('backbone') do
+      %w{models routers templates views}.each do |dir|
+        run "mkdir #{dir}"
+        FileUtils.touch("#{dir}/.gitkeep")
+      end
+      file 'bootstrap.js.coffee', <<-COFFEE
+window.App =
+  Collections = {}
+  Models      = {}
+  Routers     = {}
+  Views       = {}
+
+window.routers = {}
+
+#= require_tree ./template
+#= require_tree ./models
+#= require_tree ./views
+#= require_tree ./routers
+COFFEE
+    end
+  end
 end
 
 run('mkdir app/assets/fonts')
@@ -567,13 +651,8 @@ db/structure.sql
 **/.DS_STORE
 .sass-cache/*
 bundler_stubs/*
+binstubs/*
 GITIGNORE
-
-run 'mkdir .bundle'
-file '.bundle/config', <<-FILE
----
-BUNDLE_BIN: ./bundler_stubs
-FILE
 
 get_rid_of_shitty_double_quotes
 
