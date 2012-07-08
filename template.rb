@@ -614,20 +614,24 @@ This app uses [rbenv](https://github.com/sstephenson/rbenv/)
 
 Please follow the instructions for setting on rbenv if you already have not done so.
 
-[Install QT](https://github.com/thoughtbot/capybara-webkit/wiki/Installing-QT)
+PhantomJS must be installed, use [homebrew](http://mxcl.github.com/homebrew/)
+
+```
+brew install phantomjs
+```
 
 Install the app:
 
 ```
-$ bundle install
+bundle install
 ```
 
 Configure, create, migrate, and seed the database
 
 ```
-$ cp config/database.yml/example config/database.yml
-$ vim config/database.yml
-$ rake db:reseed
+cp config/database.yml/example config/database.yml
+vim config/database.yml
+rake db:reseed
 ```
 
 You should be good to go!

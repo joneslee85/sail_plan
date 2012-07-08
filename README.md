@@ -48,6 +48,13 @@ rails new app_name --old-style-hash -T -d postgresql --skip-bundle -m https://ra
 * `application.css` has been renamed to `application.css.sass` and it always requires `app/assets/stylesheets/application/index.css.sass`
 * A print style sheet has been added: `app/assets/stylesheets/print.css.sass` that always requires `app/assets/stylesheets/print/index.css.sass`
 
+## Notes ##
+
+The template expects [PhantomJS](http://phantomjs.org) to be installed
+via [Homebrew](http://mxcl.github.com/homebrew). If `PhantomJS` is not
+installed the template will make a single attempt to install. If that
+attempt fails the template will exit.
+
 ## Authors ##
 
 * [Brian Cardarella](http://twitter.com/bcardarella)
