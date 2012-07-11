@@ -549,6 +549,7 @@ development:
   username:
   password:
   encoding: utf8
+  min_messages: warning
 
 test:
   adapter: postgresql
@@ -556,6 +557,7 @@ test:
   username:
   password:
   encoding: utf8
+  min_messages: warning
 DATABASE
 
 file 'lib/tasks/db.rake', <<-RAKE
