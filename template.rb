@@ -521,6 +521,12 @@ inside('app/assets/javascripts') do
         FileUtils.touch("#{dir}/.gitkeep")
       end
       file 'bootstrap.js.coffee', <<-COFFEE
+#- require_self
+#= require_tree ./template
+#= require_tree ./models
+#= require_tree ./views
+#= require_tree ./routers
+
 window.App =
   Collections = {}
   Models      = {}
@@ -528,11 +534,6 @@ window.App =
   Views       = {}
 
 window.routers = {}
-
-#= require_tree ./template
-#= require_tree ./models
-#= require_tree ./views
-#= require_tree ./routers
 COFFEE
     end
   end
