@@ -370,7 +370,7 @@ inside('app/views') do
     %title #{app_name.titleize}
     = stylesheet_link_tag :application, :media => :all
     = stylesheet_link_tag :print, :media => :print
-    = javascript_include_tag 'http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.5.3/modernizr.min.js'
+    = javascript_include_tag '//cdnjs.cloudflare.com/ajax/libs/modernizr/2.5.3/modernizr.min.js'
     = javascript_include_tag :application
     = csrf_meta_tags
     %link{:rel => 'author', :type => 'text/plain', :href => '/humans.txt'}
