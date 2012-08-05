@@ -568,8 +568,6 @@ rbenv_run 'rake db:test:prepare'
 generate('simple_form:install')
 replace_line('config/initializers/simple_form.rb', :match => /config.label_text/, :with => "  config.label_text = lambda { |label, required| label }")
 
-generate('kaminari:config')
-
 if (api_key = ask('Exceptional.io API Key: ')).present?
   rbenv_run "exceptional install #{api_key}"
 end
