@@ -232,6 +232,7 @@ inside('spec') do
     "Dir[Rails.root.join('spec/config/**/*.rb')].each  {|f| require f}\n" + 
     "Dir[Rails.root.join('spec/requests/step_helpers/**/*.rb')].each  {|f| require f}\n"
   end
+  replace_line('spec_helper.rb', :match => /config.use_transactional_fixtures = true/, :with => '  config.use_transactional_fixtures = false')
 end
 
 file 'spec/support/factories.rb', <<-FILE
@@ -243,23 +244,6 @@ inside('spec/config') do
   file 'rspec.rb', <<-FILE
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true
-end
-FILE
-
-  file 'active_record.rb', <<-FILE
-class ActiveRecord::Base
-  mattr_accessor :shared_connection
-  @@shared_connection = nil
-
-  def self.connection
-    @@shared_connection || retrieve_connection
-  end
-end
-
-RSpec.configure do |config|
-  config.before(:suite) do
-    ActiveRecord::Base.shared_connection = ActiveRecord::Base.connection
-  end
 end
 FILE
 
@@ -643,22 +627,25 @@ README
 # Git Ignore
 file '.gitignore', <<-GITIGNORE, :force => true
 .bundle
-log/*.log
-/log/*.pid
-tmp/*
-/coverage/*
-public/system/*
-public/stylesheets/compiled/*
-config/database.yml
-db/*.sqlite3
-db/structure.sql
+.DS_Store
+.sass-cache/*
 *.swp
 *.swo
-.DS_Store
 **/.DS_STORE
-.sass-cache/*
-bundler_stubs/*
+bin/*
 binstubs/*
+bundler_stubs/*
+config/database.yml
+coverage/*
+db/*.sqlite3
+db/structure.sql
+log/*.log
+log/*.pid
+public/system/*
+public/stylesheets/compiled/*
+public/assets/*
+public/uploads/*
+tmp/*
 GITIGNORE
 
 get_rid_of_shitty_double_quotes
