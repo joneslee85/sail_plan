@@ -168,7 +168,7 @@ end
 file 'Gemfile', <<-GEMFILE, :force => true
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.3'
+gem 'rails', '3.2.7'
 gem 'thin'
 gem 'pg'
 gem 'jquery-rails'
