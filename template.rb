@@ -176,7 +176,7 @@ gem 'compass-rails'
 gem 'haml-rails'
 gem 'simple_form'
 gem 'exceptional'
-gem 'kaminari'
+gem 'will_paginate'
 #{install_additional_gems}
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'

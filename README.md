@@ -20,7 +20,7 @@ rails new app_name --old-style-hash -T -d postgresql --skip-bundle -m https://ra
 * [EasyAuth](https://github.com/dockyard/easy_auth)
 * [BackboneJS](backbonejs.org)
 * [haml_coffee_assets](https://github.com/netzpirat/haml_coffee_assets)
-* [Kaminari](https://github.com/amatsuda/kaminari)
+* [WillPaginate](https://github.com/mislav/will_paginate)
 * [Thin](https://github.com/macournoyer/thin)
 
 ### Devlopment Environment ###
