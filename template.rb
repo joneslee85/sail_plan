@@ -177,6 +177,7 @@ gem 'haml-rails'
 gem 'simple_form'
 gem 'exceptional'
 gem 'will_paginate'
+gem 'pages'
 #{install_additional_gems}
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'

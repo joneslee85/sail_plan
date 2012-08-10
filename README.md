@@ -6,7 +6,7 @@ Sail Plan is [DockYard](http://dockyard.com)'s Rails template
 ## Usage ##
 
 ```
-rails new app_name --old-style-hash -T -d postgresql --skip-bundle -m https://raw.github.com/dockyard/sail_plan/master/template.rb
+rails new app_name --old-style-hash -T -d postgresql --skip-bundle -m https://raw.github.com/DockYard/sail_plan/master/template.rb
 ```
 
 ## Stack ##
@@ -17,10 +17,11 @@ rails new app_name --old-style-hash -T -d postgresql --skip-bundle -m https://ra
 * [SimpleForm](https://github.com/plataformatec/simple_form)
 * [Exceptional.io](http://exceptional.io)
 * [Modernizr](http://modernizr.com) (through a [CDN](http://www.cdnjs.com))
-* [EasyAuth](https://github.com/dockyard/easy_auth)
+* [EasyAuth](https://github.com/DockYard/easy_auth)
 * [BackboneJS](backbonejs.org)
 * [haml_coffee_assets](https://github.com/netzpirat/haml_coffee_assets)
 * [WillPaginate](https://github.com/mislav/will_paginate)
+* [Pages](https://github.com/DockYard/pages
 * [Thin](https://github.com/macournoyer/thin)
 
 ### Devlopment Environment ###
@@ -33,7 +34,7 @@ rails new app_name --old-style-hash -T -d postgresql --skip-bundle -m https://ra
 * [RSpec](https://www.relishapp.com/rspec)
 * [Capybara](https://github.com/jnicklas/capybara)
 * [Poltergiest](https://github.com/jonleighton/poltergeist)
-* [CapybaraEmail](https://github.com/dockyard/capybara-email)
+* [CapybaraEmail](https://github.com/DockYard/capybara-email)
 * [FactoryGirl](https://github.com/thoughtbot/factory_girl)
 * [Bourne](https://github.com/thoughtbot/bourne)
 * [ValidAttribute](https://github.com/bcardarella/valid_attribute)
@@ -64,6 +65,6 @@ attempt fails the template will exit.
 
 [DockYard](http://dockyard.com), LLC &copy; 2012
 
-[@dockyard](http://twitter.com/dockyard)
+[@DockYard](http://twitter.com/DockYard)
 
 [Licensed under the MIT license](http://www.opensource.org/licenses/mit-license.php)
