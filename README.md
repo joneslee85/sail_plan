@@ -21,7 +21,7 @@ rails new app_name --old-style-hash -T -d postgresql --skip-bundle -m https://ra
 * [BackboneJS](backbonejs.org)
 * [haml_coffee_assets](https://github.com/netzpirat/haml_coffee_assets)
 * [WillPaginate](https://github.com/mislav/will_paginate)
-* [Pages](https://github.com/DockYard/pages
+* [Pages](https://github.com/DockYard/pages)
 * [Thin](https://github.com/macournoyer/thin)
 
 ### Devlopment Environment ###
