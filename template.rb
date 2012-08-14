@@ -359,6 +359,7 @@ inside('app/views') do
     = javascript_include_tag :application
     = csrf_meta_tags
     %link{:rel => 'author', :type => 'text/plain', :href => '/humans.txt'}
+    %meta{'http-equiv' => 'X-UA-Compatible', :content => 'chrome=1'}
     = yield :head
 
   %body{:class => body_classes}

@@ -23,6 +23,7 @@ rails new app_name --old-style-hash -T -d postgresql --skip-bundle -m https://ra
 * [WillPaginate](https://github.com/mislav/will_paginate)
 * [Pages](https://github.com/DockYard/pages)
 * [Thin](https://github.com/macournoyer/thin)
+* [Google Frame is being turned on](http://www.google.com/chromeframe)
 
 ### Devlopment Environment ###
 
