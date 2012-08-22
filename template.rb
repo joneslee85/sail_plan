@@ -508,16 +508,16 @@ inside('app/assets/javascripts') do
       end
       file 'bootstrap.js.coffee', <<-COFFEE
 #- require_self
-#= require_tree ./template
+#= require_tree ./templates
 #= require_tree ./models
 #= require_tree ./views
 #= require_tree ./routers
 
 window.App =
-  Collections = {}
-  Models      = {}
-  Routers     = {}
-  Views       = {}
+  Collections : {}
+  Models      : {}
+  Routers     : {}
+  Views       : {}
 
 window.routers = {}
 COFFEE
